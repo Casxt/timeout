@@ -72,6 +72,18 @@ func (w *Writer) FreeBuffer() {
 	w.body = nil
 }
 
+// WriteHeaderNow disabled in timeout writer
+// because Header can be writen only after user logic finished or timeout 
+func (w *Writer) WriteHeaderNow() {
+}
+
+func (w *Writer) Status() int {
+	if w.code == 0 || w.timeout {
+		return w.ResponseWriter.Status()
+	}
+	return w.code
+}
+
 func checkWriteHeaderCode(code int) {
 	if code < 100 || code > 999 {
 		panic(fmt.Sprintf("invalid http status code: %d", code))
